@@ -9,8 +9,11 @@ import org.openqa.selenium.support.ui.Select;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.net.URL;
 
 
 public class SimpleTest{
@@ -24,7 +27,11 @@ public class SimpleTest{
         LOG.info("Before ComplexTest method");
     }
 
-
+    @AfterMethod
+    public void afterTestMethod(){
+        webDriver.quit();
+        LOG.info("After test method");
+    }
 
     @Test
     public void shouldAnswerWithTrue() throws InterruptedException {
@@ -44,14 +51,15 @@ public class SimpleTest{
 
         webDriver.findElement(By.linkText("Great! Return to menu")).click();
 
-
         webDriver.findElement(By.id("form")).click();
         webDriver.findElement(By.xpath("//label[.='First Name:']/following::input")).sendKeys("Егор");
         webDriver.findElement(By.xpath("//label[.='Last Name:']/following::input")).sendKeys("Трофимов");
         webDriver.findElement(By.cssSelector("input[type=email]")).sendKeys("e999or@bk.ru");
         webDriver.findElement(By.xpath("//label[.='Sex:']/following::input")).click();
         webDriver.findElement(By.xpath("//label[.='Address:']/following::input")).sendKeys("Москва");
-        webDriver.findElement(By.xpath("//label[.='Avatar:']/following::input")).sendKeys("C:\\1\\aiteko.homework1\\tastseleniumlesson16\\src\\test\\resources\\s1200.jpg");
+        String thread = String.valueOf(Thread.currentThread().getContextClassLoader().getResource("s1200.jpg"));
+        thread = thread.replaceAll("file:/", "");
+        webDriver.findElement(By.xpath("//label[.='Avatar:']/following::input")).sendKeys(thread);
         webDriver.findElement(By.xpath("//label[.='Tell me something about yourself']/following::textarea")).sendKeys("Рокен-Ролл");
         webDriver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
 
@@ -69,16 +77,5 @@ public class SimpleTest{
         WebElement returnToMenuIframe = webDriver.findElement(By.linkText("Great! Return to menu"));
         Assert.assertEquals(returnToMenuIframe.getAttribute("innerText"),"Great! Return to menu");
         returnToMenuIframe.click();
-
-
-
-
-
-        Thread.sleep(10000);
-        webDriver.quit();
-
-
     }
-
-
 }
